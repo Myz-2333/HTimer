@@ -1,0 +1,40 @@
+server:
+  port: 6080
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.5.53
+        username: nacos
+        password: nacos
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.5.51:3306/shorturlx?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+  redis:
+    host: 192.168.5.52
+    port: 6379
+    password: 123456
+    database: 6
+    jedis:
+      pool:
+        max-active: 8 #最大连接数
+logging:
+  level:
+    root: DEBUG
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #开启驼峰命名
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+app:
+  workId: 1
+  workerIdBits: 10

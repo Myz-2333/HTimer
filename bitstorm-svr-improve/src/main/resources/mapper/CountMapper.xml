@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.improve.mapper.CountMapper">
+    <resultMap id="countMap" type="cn.bitoffer.improve.model.Count">
+        <id column="id" property="ID"/>
+        <result column="num" property="num"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `num`,
+        `create_time`,
+        `modify_time`
+    </sql>
+    <select id="getCount"  resultMap="countMap">
+        select * from t_count_test limit 1;
+    </select>
+    <update id="incrCount">
+        update t_count_test
+        <set>
+            `count` = count + #{num},
+        </set>
+        limit 1;
+    </update>
+</mapper>

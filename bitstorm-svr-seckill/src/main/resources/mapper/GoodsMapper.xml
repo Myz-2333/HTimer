@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.seckill.mapper.GoodsMapper">
+    <resultMap id="goodsMap" type="cn.bitoffer.seckill.model.Goods">
+        <id column="id" property="ID"/>
+        <result column="goods_num" property="goodsNum"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="price" property="price"/>
+        <result column="pic_url" property="picUrl"/>
+        <result column="seller" property="seller"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `goods_num`,
+        `goods_name`,
+        `price`,
+        `pic_url`,
+        `seller`,
+        `create_time`,
+        `modify_time`
+    </sql>
+    <insert id="save" useGeneratedKeys="true" keyProperty="goods.ID">
+        insert into t_goods (`goods_name`,`status`)
+        values (#{goods.goodsName},#{goods.status});
+    </insert>
+    <select id="getGoodsByNum"  resultMap="goodsMap">
+        select * from t_goods where goods_num = #{goodsNum} limit 1;
+    </select>
+    <select id="getGoodsList"  resultMap="goodsMap">
+        select * from t_goods limit #{limit} offset #{offset};
+    </select>
+</mapper>

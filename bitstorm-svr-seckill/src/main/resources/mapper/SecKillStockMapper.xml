@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.seckill.mapper.SecKillStockMapper">
+    <resultMap id="secKillStockMap" type="cn.bitoffer.seckill.model.SecKillStock">
+        <id column="id" property="ID"/>
+        <result column="goods_id" property="goodsID"/>
+        <result column="stock" property="stock"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `goods_id`,
+        `stock`,
+        `create_time`,
+        `modify_time`
+    </sql>
+    <insert id="save" useGeneratedKeys="true" keyProperty="secKillStock.secKillStockId">
+        insert into t_seckill_stock (`secKillStock_name`,`status`)
+        values (#{secKillStock.secKillStockName},#{secKillStock.status});
+    </insert>
+    <update id="descStock">
+        update t_seckill_stock
+        <set>
+             `stock` = stock - #{num},
+        </set>
+        where goods_id = #{goodsID} and stock >= #{num};
+    </update>
+
+
+</mapper>

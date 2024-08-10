@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.lottery.mapper.PrizeMapper">
+    <resultMap id="prizeMap" type="cn.bitoffer.lottery.model.Prize">
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="prize_num" property="prizeNum"/>
+        <result column="left_num" property="leftNum"/>
+        <result column="prize_code" property="prizeCode"/>
+        <result column="prize_time" property="prizeTime"/>
+        <result column="img" property="img"/>
+        <result column="display_order" property="displayOrder"/>
+        <result column="prize_type" property="prizeType"/>
+        <result column="prize_profile" property="prizeProfile"/>
+        <result column="begin_time" property="beginTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="prize_plan" property="prizePlan"/>
+        <result column="prize_begin" property="prizeBegin"/>
+        <result column="prize_end" property="prizeEnd"/>
+        <result column="sys_status" property="sysStatus"/>
+        <result column="sys_created" property="sysCreated"/>
+        <result column="sys_updated" property="sysUpdated"/>
+        <result column="sys_ip" property="sysIp"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `title`,
+        `prize_num`,
+        `left_num`,
+        `prize_code`,
+        `prize_time`,
+        `img`,
+        `display_order`,
+        `prize_type`,
+        `prize_profile`,
+        `begin_time`,
+        `end_time`,
+        `prize_plan`,
+        `prize_begin`,
+        `prize_end`,
+        `sys_status`,
+        `sys_created`,
+        `sys_updated`,
+        `sys_ip`,
+    </sql>
+
+    <select id="get" resultMap="prizeMap">
+        select * from t_prize where id = #{id};
+    </select>
+
+    <select id="getAll" resultMap="prizeMap">
+        select * from t_prize;
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into t_prize (`title`,`prize_num`,`left_num`,`prize_code`,`prize_time`,`img`,`display_order`,`prize_type`,`begin_time`,`end_time`,`prize_plan`,`sys_status`,`sys_created`,`sys_updated`)
+        values (#{prize.title},#{prize.prizeNum},#{prize.leftNum},#{prize.prizeCode},#{prize.prizeTime},#{prize.img},#{prize.displayOrder},
+               #{prize.prizeType},#{prize.beginTime},#{prize.endTime},#{prize.prizePlan},#{prize.sysStatus},#{prize.sysCreated},#{prize.sysUpdated});
+    </insert>
+
+    <insert id="saveInBatches" useGeneratedKeys="true" keyProperty="id">
+        insert into t_prize (`title`,`prize_num`,`left_num`,`prize_code`,`prize_time`,`img`,`display_order`,`prize_type`,`begin_time`,`end_time`,`prize_plan`,`sys_status`,`sys_created`,`sys_updated`)
+        values
+        <foreach collection="prizeList" item="prize" separator=",">
+            (#{prize.title},#{prize.prizeNum},#{prize.leftNum},#{prize.prizeCode},#{prize.prizeTime},#{prize.img},#{prize.displayOrder},
+            #{prize.prizeType},#{prize.beginTime},#{prize.endTime},#{prize.prizePlan},#{prize.sysStatus},#{prize.sysCreated},#{prize.sysUpdated})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        delete from t_prize;
+    </delete>
+
+    <update id="updatePrizePlan">
+        update t_prize set prize_plan = #{prizePlan},sys_updated= now() where id = #{id};
+    </update>
+
+    <update id="updatePrizePlanWithTime">
+        update t_prize set prize_plan = #{prizePlan}, prize_begin= #{prizeBegin}, prize_end= #{prizeEnd},sys_updated= now() where id = #{id};
+    </update>
+
+    <select id="getAllUsefulPrizeList" resultMap="prizeMap">
+        select * from t_prize where  end_time &gt;= #{now} and begin_time &lt;= #{now} and prize_num &gt; 0 and sys_status = 1;
+    </select>
+
+    <select id="getGetNextUsefulPrize" resultMap="prizeMap">
+        select * from t_prize where sys_status = 1 and prize_id = #{prizeID} and id > #{prizeID} limit 1;
+    </select>
+
+    <update id="decrLeftNum">
+        update t_prize set left_num = left_num-1,sys_updated= now() where id = #{id} and left_num &gt;= #{num};
+    </update>
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.asyncflow.mapper.TaskMapper">
+    <resultMap id="taskMap" type="cn.bitoffer.asyncflow.model.TaskModel">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="task_id" jdbcType="VARCHAR" property="taskId"/>
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="task_stage" jdbcType="VARCHAR" property="taskStage"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="crt_retry_num" jdbcType="BIGINT" property="crtRetryNum"/>
+        <result column="max_retry_num" jdbcType="BIGINT" property="maxRetryNum"/>
+        <result column="priority" jdbcType="BIGINT" property="priority"/>
+        <result column="order_time" jdbcType="BIGINT" property="orderTime"/>
+        <result column="max_retry_interval" jdbcType="BIGINT" property="maxRetryInterval"/>
+        <result column="schedule_log" jdbcType="VARCHAR" property="scheduleLog"/>
+        <result column="task_context" jdbcType="VARCHAR" property="taskContext"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime"/>
+    </resultMap>
+
+
+    <insert id="create" useGeneratedKeys="true" keyProperty="task.id">
+        INSERT INTO ${tableName} (
+            `user_id`, `task_id`, `task_type`, `task_stage`, `status`,
+            `crt_retry_num`, `max_retry_num`, `order_time`, `priority`,
+            `max_retry_interval`, `schedule_log`, `task_context`, `create_time`, `modify_time`
+        )
+        VALUES (
+                   #{task.userId}, #{task.taskId}, #{task.taskType}, #{task.taskStage}, #{task.status},
+                   #{task.crtRetryNum}, #{task.maxRetryNum}, #{task.orderTime}, #{task.priority},
+                   #{task.maxRetryInterval}, #{task.scheduleLog}, #{task.taskContext}, now(), now()
+               )
+    </insert>
+
+<!--    <insert id="save" useGeneratedKeys="true" keyProperty="id">-->
+<!--        UPDATE ${tableName}-->
+<!--        SET-->
+<!--            user_id = #{task.userId},-->
+<!--            task_stage = #{task.taskStage},-->
+<!--            status = #{task.status},-->
+<!--            crt_retry_num = #{task.crtRetryNum},-->
+<!--            max_retry_num = #{task.maxRetryNum},-->
+<!--            priority = #{task.priority},-->
+<!--            order_time = #{task.orderTime},-->
+<!--            max_retry_interval = #{task.maxRetryInterval},-->
+<!--            schedule_log = #{task.scheduleLog},-->
+<!--            task_context = #{task.taskContext},-->
+<!--            modify_time = #{task.modifyTime}-->
+<!--        WHERE task_id = #{task.taskId}-->
+<!--          AND status != 3-->
+<!--          AND status != 4;-->
+<!--    </insert>-->
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="task.id">
+        UPDATE ${tableName}
+        SET
+        <if test="task.userId != null">
+            user_id = #{task.userId},
+        </if>
+        <if test="task.status != null">
+            status = #{task.status},
+        </if>
+        <if test="task.crtRetryNum != null">
+            crt_retry_num = #{task.crtRetryNum},
+        </if>
+        <if test="task.maxRetryNum != null">
+            max_retry_num = #{task.maxRetryNum},
+        </if>
+        <if test="task.priority != null">
+            priority = #{task.priority},
+        </if>
+        <if test="task.orderTime != null">
+            order_time = #{task.orderTime},
+        </if>
+        <if test="task.maxRetryInterval != null">
+            max_retry_interval = #{task.maxRetryInterval},
+        </if>
+        <if test="task.scheduleLog != null">
+            schedule_log = #{task.scheduleLog},
+        </if>
+        <if test="task.taskContext != null">
+            task_context = #{task.taskContext},
+        </if>
+        <if test="task.modifyTime != null">
+            modify_time = #{task.modifyTime},
+        </if>
+        <if test="task.taskStage != null">
+            task_stage = #{task.taskStage}
+        </if>
+        WHERE task_id = #{task.taskId}
+        AND status != 3
+        AND status != 4;
+    </insert>
+
+
+<!--    <update id="updateStatusBatch">-->
+<!--        update ${tableName} set status = #{status}-->
+<!--        where id in-->
+<!--        <foreach collection="ids" item="s" index="index"-->
+<!--                 open="(" close=")" separator=",">-->
+<!--            #{s}-->
+<!--        </foreach>-->
+<!--    </update>-->
+
+    <update id="updateStatusBatch">
+        update ${tableName}
+        set status = #{status}, modify_time = NOW()
+        where task_id in
+        <foreach collection="taskIdList" item="taskId" open="(" close=")" separator=",">
+            #{taskId}
+        </foreach>
+    </update>
+
+
+    <select id="getTask" resultMap="taskMap">
+        select *
+        from ${tableName}
+        where task_id = #{taskId}
+    </select>
+
+
+    <update id="increaseCrtRetryNum">
+        update
+            ${tableName}
+        set crt_retry_num = crt_retry_num + 1
+        where task_id = #{task_id}
+    </update>
+
+    <select id="getTaskList" resultMap="taskMap">
+        SELECT *
+        FROM ${tableName}
+        where status = #{status}
+        order by order_time
+        limit #{limit}
+    </select>
+
+
+    <select id="getTaskCountByStatus" resultType="java.lang.Integer"
+            parameterType="java.lang.Integer">
+        select count(*)
+        from ${tableName}
+        where status = #{status}
+    </select>
+
+    <select id="getTaskCount" resultType="java.lang.Integer">
+        select count(*) from ${tableName}
+        where
+        status in
+        <foreach collection="statusList" item="status" index="index"
+                 open="(" close=")" separator=",">
+            #{status}
+        </foreach>
+    </select>
+
+
+</mapper>

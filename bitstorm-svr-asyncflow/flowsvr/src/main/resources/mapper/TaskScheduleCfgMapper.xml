@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+namespace: 命名空间，用于标识每一个Mapper XML文件中的语句，预防在不同的Mapper XML文件中存在相同的语句ID
+-->
+<mapper namespace="cn.bitoffer.asyncflow.mapper.TaskScheduleCfgMapper">
+    <resultMap id="scheduleCFG" type="cn.bitoffer.asyncflow.model.TaskScheduleCfgModel">
+        <result column="task_type" jdbcType="VARCHAR" property="taskType"/>
+        <result column="schedule_limit" jdbcType="INTEGER" property="scheduleLimit"/>
+        <result column="schedule_interval" jdbcType="INTEGER" property="scheduleInterval"/>
+        <result column="max_processing_time" jdbcType="INTEGER" property="maxProcessingTime"/>
+        <result column="max_retry_num" jdbcType="INTEGER" property="maxRetryNum"/>
+        <result column="retry_interval" jdbcType="INTEGER" property="retryInterval"/>
+        <result column="max_retry_interval" jdbcType="INTEGER" property="maxRetryInterval"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+    </resultMap>
+
+    <select id="getTaskTypeCfg"
+            resultMap="scheduleCFG"
+            parameterType="java.lang.String">
+        SELECT *
+        FROM `t_schedule_cfg`
+        where task_type = #{taskType}
+    </select>
+    <select id="getTaskTypeCfgList" resultMap="scheduleCFG">
+        select *
+        from t_schedule_cfg
+    </select>
+
+    <insert id="save"
+            parameterType="cn.bitoffer.asyncflow.model.TaskScheduleCfgModel">
+        INSERT INTO `t_schedule_cfg`(`task_type`,
+                                     `schedule_limit`,
+                                     `schedule_interval`,
+                                     `max_processing_time`,
+                                     `max_retry_num`,
+                                     `retry_interval`,
+                                     `create_time`,
+                                     `modify_time`)
+        VALUES (#{task_type}, #{schedule_limit}, #{schedule_interval}, #{max_processing_time},
+                #{max_retry_num}, #{retry_interval}, #{create_time}, #{modify_time})
+    </insert>
+
+</mapper>

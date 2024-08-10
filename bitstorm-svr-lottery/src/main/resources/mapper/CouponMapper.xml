@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.lottery.mapper.CouponMapper">
+    <resultMap id="couponMap" type="cn.bitoffer.lottery.model.Coupon">
+        <result column="id" property="id"/>
+        <result column="prize_id" property="prizeId"/>
+        <result column="code" property="code"/>
+        <result column="sys_created" property="sysCreated"/>
+        <result column="sys_updated" property="sysUpdated"/>
+        <result column="sys_status" property="sysStatus"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `prize_id`,
+        `code`,
+        `sys_created`,
+        `sys_updated`,
+        `sys_status`,
+    </sql>
+
+    <select id="getAll" resultMap="couponMap">
+        select * from t_coupon;
+    </select>
+
+    <select id="getCouponListByPrizeID" resultMap="couponMap">
+        select * from t_coupon where prize_id = #{prizeID};
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="coupon.id">
+        insert into t_coupon (`prize_id`,`code`,`sys_created`,`sys_updated`,`sys_status`)
+        values (#{coupon.prizeId},#{coupon.code},#{coupon.sysCreated},#{coupon.sysUpdated},#{coupon.sysStatus});
+    </insert>
+
+    <update id="updateByCode">
+        update t_coupon set sys_status = 2,sys_updated= now() where code = #{code};
+    </update>
+
+    <select id="getGetNextUsefulCoupon" resultMap="couponMap">
+        select * from t_coupon where sys_status = 1 and prize_id = #{prizeID} and id > #{couponID} limit 1;
+    </select>
+</mapper>

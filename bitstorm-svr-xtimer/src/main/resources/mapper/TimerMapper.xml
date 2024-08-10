@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.xtimer.mapper.TimerMapper">
+    <resultMap id="timer" type="cn.bitoffer.xtimer.model.TimerModel">
+        <result column="timer_id" property="timerId" />
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time"  property="modifyTime"/>
+        <result column="app"  property="app"/>
+        <result column="name"  property="name"/>
+        <result column="status"  property="status"/>
+        <result column="cron"  property="cron"/>
+        <result column="notify_http_param"  property="notifyHTTPParam"/>
+    </resultMap>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="timerModel.timerId">
+        insert into xtimer (`app`,`name`,`status`,`cron`,`notify_http_param`)
+        values (#{timerModel.app},#{timerModel.name},#{timerModel.status},#{timerModel.cron},#{timerModel.notifyHTTPParam});
+    </insert>
+    <delete id="deleteById">
+        delete from xtimer where timer_id = #{timerId};
+    </delete>
+    <update id="update">
+        update xtimer
+        <set>
+            <if test="timerModel.app != null">
+                `app` = #{timerModel.app},
+            </if>
+            <if test="timerModel.name != null">
+                `name` = #{timerModel.name},
+            </if>
+            <if test="timerModel.status != null">
+                `status` = #{timerModel.status},
+            </if>
+            <if test="timerModel.cron != null">
+                `cron` = #{timerModel.cron},
+            </if>
+            <if test="timerModel.notifyHTTPParam != null">
+                `notify_http_param` = #{timerModel.notifyHTTPParam},
+            </if>
+        </set>
+        where timer_id = #{timerModel.timerId};
+    </update>
+
+    <select id="getTimerById" resultMap="timer">
+        select * from xtimer where timer_id = #{timerId};
+    </select>
+
+    <select id="getTimersByStatus" resultMap="timer">
+        select * from xtimer where status = #{status};
+    </select>
+</mapper>

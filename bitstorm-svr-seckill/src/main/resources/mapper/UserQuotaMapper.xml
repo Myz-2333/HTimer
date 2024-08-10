@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.seckill.mapper.UserQuotaMapper">
+    <resultMap id="userQuotaMap" type="cn.bitoffer.seckill.model.UserQuota">
+        <id column="id" property="ID"/>
+        <result column="num" property="num"/>
+        <result column="killed_num" property="killedNum"/>
+        <result column="user_id" property="userID"/>
+        <result column="goods_id" property="goodsID"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `num`,
+        `killed_num`,
+        `user_id`,
+        `goods_id`,
+        `create_time`,
+        `modify_time`
+    </sql>
+    <insert id="save" useGeneratedKeys="true" keyProperty="userQuota.ID">
+        insert into t_user_quota(`num`,`killed_num`, `user_id`, `goods_id`)
+        values (#{userQuota.num},#{userQuota.killedNum}, #{userQuota.userID}, #{userQuota.goodsID});
+    </insert>
+    <select id="getUserGoodsUserQuota"  resultMap="userQuotaMap">
+        select * from t_user_quota where user_id = #{userID} and goods_id = #{goodsID} limit 1;
+    </select>
+    <update id="incrKilledNum">
+        update t_user_quota
+        <set>
+            `killed_num` = killed_num + #{num},
+        </set>
+        where user_id = #{userID} and goods_id = #{goodsID};
+    </update>
+</mapper>

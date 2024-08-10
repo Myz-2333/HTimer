@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.lottery.mapper.LotteryTimesMapper">
+    <resultMap id="lotteryTimesMap" type="cn.bitoffer.lottery.model.LotteryTimes">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="day" property="day"/>
+        <result column="num" property="num"/>
+        <result column="sys_created" property="sysCreated"/>
+        <result column="sys_updated" property="sysUpdated"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `user_id`,
+        `day`,
+        `num`,
+        `sys_created`,
+        `sys_updated`,
+    </sql>
+
+    <select id="getByUserIDAndDay" resultMap="lotteryTimesMap">
+        select * from t_lottery_times where `user_id`= #{userID} and `day` = #{day} limit 1;
+    </select>
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="lotteryTimes.id">
+        insert into t_lottery_times (`user_id`,`day`,`num`,`sys_created`,`sys_updated`)
+        values (#{lotteryTimes.userId},#{lotteryTimes.day},#{lotteryTimes.num},#{lotteryTimes.sysCreated},#{lotteryTimes.sysUpdated});
+    </insert>
+
+    <update id="update">
+        update t_lottery_times set num = num + 1,sys_updated= now() where id = #{lotteryTimes.id};
+    </update>
+
+</mapper>

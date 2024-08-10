@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.xtimer.mapper.TaskMapper">
+    <resultMap id="taskMap" type="cn.bitoffer.xtimer.model.TaskModel">
+        <result column="task_id" property="taskId" />
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time"  property="modifyTime"/>
+        <result column="timer_id"  property="timerId"/>
+        <result column="app"  property="app"/>
+        <result column="output"  property="output"/>
+        <result column="run_timer"  property="runTimer"/>
+        <result column="cost_time"  property="costTime"/>
+        <result column="status"  property="status"/>
+    </resultMap>
+
+    <insert id="batchSave" useGeneratedKeys="true">
+        insert ignore into timer_task (`app`,`timer_id`,`output`,`run_timer`,`cost_time`,`status`)
+        values
+            <foreach collection="taskList" item="taskModel" separator=",">
+                (#{taskModel.app},#{taskModel.timerId},#{taskModel.output},#{taskModel.runTimer},#{taskModel.costTime},#{taskModel.status})
+            </foreach>
+    </insert>
+    <delete id="deleteById">
+        delete from timer_task where task_id = #{taskId};
+    </delete>
+    <update id="update">
+        update timer_task
+        <set>
+            <if test="taskModel.app != null">
+                `app` = #{taskModel.app},
+            </if>
+            <if test="taskModel.timerId != null">
+                `timer_id` = #{taskModel.timerId},
+            </if>
+            <if test="taskModel.output != null">
+                `output` = #{taskModel.output},
+            </if>
+            <if test="taskModel.runTimer != null">
+                `run_timer` = #{taskModel.runTimer},
+            </if>
+            <if test="taskModel.costTime != null">
+                `cost_time` = #{taskModel.costTime},
+            </if>
+            <if test="taskModel.status != null">
+                `status` = #{taskModel.status},
+            </if>
+        </set>
+        where task_id = #{taskModel.taskId};
+    </update>
+
+    <select id="getTasksByTimeRange" resultMap="taskMap">
+        select * from timer_task
+        <where>
+            <if test="startTime != null">
+                AND `run_timer` <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND `run_timer` <![CDATA[<=]]> #{endTime}
+            </if>
+            <if test="taskStatus != null">
+                AND `status` = #{taskStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="getTasksByTimerIdUnix" resultType="cn.bitoffer.xtimer.model.TaskModel" resultMap="taskMap">
+        select * from timer_task where timer_id = #{timerId} and run_timer = #{runTimer}
+    </select>
+</mapper>

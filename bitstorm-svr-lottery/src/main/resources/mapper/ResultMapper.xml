@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.lottery.mapper.ResultMapper">
+    <resultMap id="resultMap" type="cn.bitoffer.lottery.model.Result">
+        <result column="id" property="id"/>
+        <result column="prize_id" property="prizeId"/>
+        <result column="prize_name" property="prizeName"/>
+        <result column="prize_type" property="prizeType"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="prize_code" property="prizeCode"/>
+        <result column="prize_data" property="prizeData"/>
+        <result column="sys_created" property="sysCreated"/>
+        <result column="sys_ip" property="sysIp"/>
+        <result column="sys_status" property="sysStatus"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `prize_id`,
+        `prize_name`,
+        `prize_type`,
+        `user_id`,
+        `user_name`,
+        `prize_code`,
+        `prize_data`,
+        `sys_created`,
+        `sys_ip`,
+        `sys_status`,
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="result.id">
+        insert into t_result (`prize_id`,`prize_name`,`prize_type`,`user_id`,`user_name`,`prize_code`,`prize_data`,`sys_created`,`sys_ip`,`sys_status`)
+        values (#{result.prizeId},#{result.prizeName},#{result.prizeType},#{result.userId},#{result.userName},#{result.prizeCode},#{result.prizeData},#{result.sysCreated},#{result.sysIp},#{result.sysStatus});
+    </insert>
+
+    <delete id="deleteAll">
+        delete from t_result;
+    </delete>
+</mapper>

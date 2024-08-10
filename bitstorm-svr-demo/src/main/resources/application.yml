@@ -1,0 +1,52 @@
+
+server:
+  port: 8081
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/bitstorm-svr?serverTimezone=GMT%2B8&characterEncoding=utf8&useSSL=false
+    username: root
+    password: root@2023
+  redis:
+    host: localhost
+    port: 6379
+    password: root2023
+    database: 0
+    jedis:
+      pool:
+        max-active: 8 #最大连接数
+  kafka:
+    #以逗号分隔的主机：端口对列表，用于建立与Kafka的连接
+    bootstrap-servers: 127.0.0.1:9092
+    producer:
+      # 发生错误后，消息重发的次数。
+      retries: 0
+      #当有多个消息需要被发送到同一个分区时，生产者会把它们放在同一个批次里。该参数指定了一个批次可以使用的内存大小，按照字节数计算。
+      batch-size: 16384
+      # 设置生产者内存缓冲区的大小。
+      buffer-memory: 33554432
+      # 键的序列化方式
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 值的序列化方式
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 1
+    consumer:
+      # 键的反序列化方式
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 值的反序列化方式
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #开启驼峰命名
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

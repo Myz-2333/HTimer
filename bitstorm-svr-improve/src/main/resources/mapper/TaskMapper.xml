@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.improve.mapper.TaskMapper">
+    <resultMap id="countMap" type="cn.bitoffer.improve.model.Task">
+        <id column="id" property="ID"/>
+        <result column="task_id" property="taskID"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `task_id`,
+        `create_time`,
+        `modify_time`
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="task.ID">
+        insert into t_task_test(`task_id`)
+        values (#{task.taskID});
+    </insert>
+</mapper>

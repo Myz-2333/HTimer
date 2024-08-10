@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.seckill.mapper.SecKillRecordMapper">
+    <resultMap id="secKillRecordMap" type="cn.bitoffer.seckill.model.SecKillRecord">
+        <id column="id" property="ID"/>
+        <result column="sec_num" property="secNum"/>
+        <result column="user_id" property="userID"/>
+        <result column="goods_id" property="goodsID"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `sec_num`,
+        `user_id`,
+        `goods_id`,
+        `order_num`,
+        `price`,
+        `status`,
+        `create_time`,
+        `modify_time`
+    </sql>
+    <insert id="save" useGeneratedKeys="true" keyProperty="secKillRecord.ID">
+        insert into t_seckill_record (`sec_num`,`user_id`,`goods_id`,`order_num`,`price`, `status`)
+        values (#{secKillRecord.secNum},#{secKillRecord.userID},#{secKillRecord.goodsID},#{secKillRecord.orderNum},#{secKillRecord.price},#{secKillRecord.status});
+    </insert>
+</mapper>

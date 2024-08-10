@@ -1,0 +1,80 @@
+
+server:
+  port: 8082
+
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/bitstorm-svr?serverTimezone=GMT%2B8&characterEncoding=utf8&&allowMultiQueries=true&useSSL=false
+    username: root
+    password: root@2023
+    type: com.alibaba.druid.pool.DruidDataSource
+#    druid:
+#      min-idle: 1                                          # 最小连接数
+#      max-active: 100                                         # 最大连接数(默认8)
+#      max-wait: 1000                                       # 获取连接时的最大等待时间
+#      min-evictable-idle-time-millis: 300000               # 一个连接在池中最小生存的时间，单位是毫秒
+#      time-between-eviction-runs-millis: 60000             # 多久才进行一次检测需要关闭的空闲连接，单位是毫秒
+
+  redis:
+    host: localhost
+    port: 6379
+    password: root2023
+    database: 0
+    jedis:
+      pool:
+        max-active: 8 #最大连接数
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #开启驼峰命名
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+#xTimer相关配置
+scheduler:
+   bucketsNum: 5
+   tryLockSeconds: 70
+   tryLockGapMilliSeconds: 100
+   successExpireSeconds: 130
+   pool:
+    corePoolSize: 100
+    maxPoolSize: 100
+    queueCapacity: 99999
+    namePrefix: scheduler-
+
+
+trigger:
+   zrangeGapSeconds: 1
+   workersNum: 10000
+   pool:
+     corePoolSize: 100
+     maxPoolSize: 100
+     queueCapacity: 99999
+     namePrefix: trigger-
+
+migrator:
+   workersNum: 1000
+   migrateStepMinutes: 60
+   migrateTryLockMinutes: 1
+   migrateSuccessExpireMinutes: 1
+   timerDetailCacheMinutes: 2
+
+logging:
+  config: classpath:logback.xml
+  level:
+    com.bitoffer.xtimer: info
+    org.springframework: warn
+
+

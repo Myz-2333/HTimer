@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.lottery.mapper.BlackUserMapper">
+    <resultMap id="blackUserMap" type="cn.bitoffer.lottery.model.BlackUser">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="black_time" property="blackTime"/>
+        <result column="real_name" property="realName"/>
+        <result column="mobile" property="mobile"/>
+        <result column="address" property="address"/>
+        <result column="sys_created" property="sysCreated"/>
+        <result column="sys_updated" property="sysUpdated"/>
+        <result column="sys_ip" property="sysIp"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `id`,
+        `user_id`,
+        `user_name`,
+        `black_time`,
+        `real_name`,
+        `mobile`,
+        `address`,
+        `sys_created`,
+        `sys_updated`,
+        `sys_ip`,
+    </sql>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="blackUser.id">
+        insert into t_black_user (`user_id`,`user_name`,`black_time`,`sys_created`,`sys_updated`,`sys_ip`)
+        values (#{blackUser.userId},#{blackUser.userName},#{blackUser.blackTime},#{blackUser.sysCreated},#{blackUser.sysUpdated},#{blackUser.sysIp});
+    </insert>
+    <update id="updateBlackTimeByUserId">
+        update t_black_user set black_time = #{blackTime}, sys_updated= now() where user_id = #{uid};
+    </update>
+    <select id="getByUserId" resultMap="blackUserMap">
+        select * from t_black_user where user_id = #{uid} limit 1;
+    </select>
+</mapper>

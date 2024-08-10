@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: @artifactId@
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:192.168.5.13}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:leaf}?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true&useAffectedRows=true
+    username: ${MYSQL_USERNAME:witt}
+    password: ${MYSQL_PASSWORD:Witt@2023}
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:192.168.5.11}:${NACOS_PORT:8848}
+        username: nacos
+        password: nacos

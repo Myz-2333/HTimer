@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.asyncflow.mapper.TaskPosMapper">
+    <resultMap id="taskPosMap" type="cn.bitoffer.asyncflow.model.TaskPosModel">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="taskType" column="task_type" jdbcType="VARCHAR"/>
+        <result property="scheduleBeginPos" column="schedule_begin_pos" jdbcType="INTEGER"/>
+        <result property="scheduleEndPos" column="schedule_end_pos" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="BIGINT"/>
+        <result property="modifyTime" column="modify_time" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <insert id="create"
+            parameterType="cn.bitoffer.asyncflow.model.TaskPosModel"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into t_schedule_pos (`task_type`,
+                                    `schedule_begin_pos`,
+                                    `schedule_end_pos`,
+                                    `create_time`,
+                                    `modify_time`)
+        VALUES (#{taskType}, #{scheduleBeginPos},
+                #{scheduleEndPos}, #{createTime}, #{modifyTime})
+    </insert>
+
+    <update id="save" parameterType="cn.bitoffer.asyncflow.model.TaskPosModel">
+        UPDATE t_schedule_pos
+        SET schedule_begin_pos = #{scheduleBeginPos},
+            schedule_end_pos   = #{scheduleEndPos},
+            modify_time        = #{modifyTime}
+        WHERE task_type = #{taskType}
+    </update>
+
+    <select id="getTaskPos" resultMap="taskPosMap">
+        select *
+        from t_schedule_pos
+        where task_type = #{taskType}
+    </select>
+
+    <select id="getTaskPosList" resultMap="taskPosMap">
+        select *
+        from t_schedule_pos
+    </select>
+</mapper>

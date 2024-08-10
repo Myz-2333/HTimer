@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.bitoffer.seckill.mapper.ExampleMapper">
+    <resultMap id="exampleMap" type="cn.bitoffer.seckill.model.Example">
+        <id column="example_id" property="exampleId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="example_name" property="exampleName"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <sql id="Vo_Column_List">
+        `example_id`,
+        `create_time`,
+        `update_time`,
+        `example_name`,
+        `status`
+    </sql>
+    <insert id="save" useGeneratedKeys="true" keyProperty="example.exampleId">
+        insert into example (`example_name`,`status`)
+        values (#{example.exampleName},#{example.status});
+    </insert>
+    <delete id="deleteById">
+        delete from example where example_id = #{exampleId};
+    </delete>
+    <update id="update">
+        update example
+        <set>
+            <if test="example.exampleId != null">
+                `example_id` = #{example.exampleId},
+            </if>
+            <if test="example.exampleName != null">
+                `example_name` = #{example.exampleName},
+            </if>
+            <if test="example.status != null">
+                `status` = #{example.status},
+            </if>
+        </set>
+        where example_id = #{example.exampleId};
+    </update>
+    <select id="getExampleById" resultType="cn.bitoffer.seckill.model.Example">
+        select * from example where example_id = #{exampleId};
+    </select>
+</mapper>
